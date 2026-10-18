@@ -69,7 +69,7 @@ export type Issue = UnknownCategoryIssue | InvalidPointsPossibleValueIssue;
  * the total and letter are null too. The total is rounded to `decimalPlaces`.
  */
 export type GradeResult = {
-  scorePerCategory: Record<string, number | null>;
+  gradePerCategory: Record<string, number | null>;
   weightedTotal: number | null;
   letterGrade: string | null;
   issues: Issue[];
