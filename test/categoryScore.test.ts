@@ -1,9 +1,12 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
+import { categoryScore } from "../src/categoryScore";
 
 // All scores are out of 100 unless the name says otherwise.
 describe("categoryScore", () => {
   describe("nothing to count", () => {
-    it.todo("no scores -> null");
+    it("no scores -> null", () => {
+      expect(categoryScore([])).toBeNull();
+    });
     it.todo("only not-entered scores -> null");
     it.todo("only excused scores -> null");
     it.todo("only dropped scores, even with points -> null");
