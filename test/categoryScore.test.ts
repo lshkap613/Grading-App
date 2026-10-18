@@ -56,10 +56,56 @@ describe("categoryScore", () => {
       ).toBe(85);
     });
 
-    it.todo("one entered 18/20 -> 90");
-    it.todo("one late 70 -> 70 (no deduction)");
-    it.todo("one missing -> 0, not null");
-    it.todo("one entered 0 -> 0");
+    it("one entered 18/20 -> 90", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 20,
+            status: "entered",
+            points: 18,
+          },
+        ]),
+      ).toBe(90);
+    });
+
+    it("one late 70 -> 70 (no deduction)", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "late",
+            points: 70,
+          },
+        ]),
+      ).toBe(70);
+    });
+
+    it("one missing -> 0, not null", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "missing",
+          },
+        ]),
+      ).toBe(0);
+    });
+
+    it("one entered 0 -> 0", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 0,
+          },
+        ]),
+      ).toBe(0);
+    });
   });
 
   describe("statuses", () => {
