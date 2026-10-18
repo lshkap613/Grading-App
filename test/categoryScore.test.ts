@@ -7,9 +7,39 @@ describe("categoryScore", () => {
     it("no scores -> null", () => {
       expect(categoryScore([])).toBeNull();
     });
-    it.todo("only not-entered scores -> null");
-    it.todo("only excused scores -> null");
-    it.todo("only dropped scores, even with points -> null");
+
+    it("only not-entered scores -> null", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "not-entered",
+          },
+        ]),
+      ).toBeNull();
+    });
+
+    it("only excused scores -> null", () => {
+      expect(
+        categoryScore([
+          { categoryId: "homework", pointsPossible: 100, status: "excused" },
+        ]),
+      ).toBeNull();
+    });
+
+    it("only dropped scores, even with points -> null", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "dropped",
+            points: 52,
+          },
+        ]),
+      ).toBeNull();
+    });
   });
 
   describe("single score", () => {
