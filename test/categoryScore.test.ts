@@ -43,7 +43,19 @@ describe("categoryScore", () => {
   });
 
   describe("single score", () => {
-    it.todo("one entered 85 -> 85");
+    it("one entered 85 -> 85", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 85,
+          },
+        ]),
+      ).toBe(85);
+    });
+
     it.todo("one entered 18/20 -> 90");
     it.todo("one late 70 -> 70 (no deduction)");
     it.todo("one missing -> 0, not null");
