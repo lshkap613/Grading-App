@@ -17,11 +17,11 @@ Goals:
 
 The only app user in v1 is the teacher. Students and parents receive output (printed strips, emails) but do not log in.
 
-| Person | What they do in v1 |
-| --- | --- |
+| Person  | What they do in v1                                                                       |
+| ------- | ---------------------------------------------------------------------------------------- |
 | Teacher | Creates classes, enters scores, configures rules, runs drills, prints and emails reports |
-| Student | Sees their own drill progress on a printed strip or in an email sent to their parents |
-| Parent | Receives the drill report by email |
+| Student | Sees their own drill progress on a printed strip or in an email sent to their parents    |
+| Parent  | Receives the drill report by email                                                       |
 
 In scope for v1: classes and rosters, configurable categories and weights, saved weight presets, configurable grade scale, excused/missing/late handling, drills, drill reports (print and email), paste/CSV import, optional seating charts, attendance, missing-work lists, and final grade comments with AI suggestions.
 
@@ -31,18 +31,18 @@ Out of scope for v1: student or parent logins, sharing a class between teachers,
 
 In the spreadsheet, tab names such as HW, Q and T were hardcoded. In the app they are teacher-defined categories, and weights are saved as reusable presets.
 
-| Entity | Key fields | Notes |
-| --- | --- | --- |
-| Teacher | name, email | Owns all data below |
-| Class | name, grade level, school year, weight set, grade scale, rounding, low-score threshold, late policy, default drill length | Weights are copied from a preset when the class is created, then editable per class |
-| Student | name, parent email(s) | Belongs to one or more classes |
-| Category | name, weight, type | Teacher-defined (Homework, Quizzes, Tests, Projects, ...). Type is "assignments" or "daily score" (for participation) |
-| Assignment | category, title, date, points possible | Points possible defaults to 100; extra credit allowed |
-| Score | student, assignment, value, status, original value | Status is graded, missing, excused or late |
-| Weight preset | name, list of categories with weights | Saved per teacher; a system default exists and cannot be deleted |
-| Grade scale | name, list of (minimum %, letter) | Saved per teacher; the system default is the scale from the current spreadsheet |
-| Drill | class, topic, required attempts, max score | Required attempts defaults to the class setting and can be overridden per drill |
-| Drill attempt | drill, student, attempt number, date, score, note | A blank attempt means the student did not take it, not a zero |
+| Entity        | Key fields                                                                                                                | Notes                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Teacher       | name, email                                                                                                               | Owns all data below                                                                                                   |
+| Class         | name, grade level, school year, weight set, grade scale, rounding, low-score threshold, late policy, default drill length | Weights are copied from a preset when the class is created, then editable per class                                   |
+| Student       | name, parent email(s)                                                                                                     | Belongs to one or more classes                                                                                        |
+| Category      | name, weight, type                                                                                                        | Teacher-defined (Homework, Quizzes, Tests, Projects, ...). Type is "assignments" or "daily score" (for participation) |
+| Assignment    | category, title, date, points possible                                                                                    | Points possible defaults to 100; extra credit allowed                                                                 |
+| Score         | student, assignment, value, status, original value                                                                        | Status is graded, missing, excused or late                                                                            |
+| Weight preset | name, list of categories with weights                                                                                     | Saved per teacher; a system default exists and cannot be deleted                                                      |
+| Grade scale   | name, list of (minimum %, letter)                                                                                         | Saved per teacher; the system default is the scale from the current spreadsheet                                       |
+| Drill         | class, topic, required attempts, max score                                                                                | Required attempts defaults to the class setting and can be overridden per drill                                       |
+| Drill attempt | drill, student, attempt number, date, score, note                                                                         | A blank attempt means the student did not take it, not a zero                                                         |
 
 The weight preset dropdown appears when creating a class. Teachers can also save the weights they set on an existing class as a new preset.
 
@@ -97,18 +97,18 @@ The engine is a pure, unit-tested function: given a class's configuration and a 
 Default grade scale, taken from the spreadsheet:
 
 | Minimum % | Letter |
-| --- | --- |
-| 97 | A+ |
-| 93 | A |
-| 90 | A- |
-| 87 | B+ |
-| 83 | B |
-| 80 | B- |
-| 77 | C+ |
-| 73 | C |
-| 70 | C- |
-| 65 | D |
-| 0 | F |
+| --------- | ------ |
+| 97        | A+     |
+| 93        | A      |
+| 90        | A-     |
+| 87        | B+     |
+| 83        | B      |
+| 80        | B-     |
+| 77        | C+     |
+| 73        | C      |
+| 70        | C-     |
+| 65        | D      |
+| 0         | F      |
 
 Default weights in the system preset are an assumption to confirm: for example Participation 30, Homework 20, Quizzes 20, Tests 30, which matches the 8th grade classes. The 7th grade classes use 40 / 20 / 15 / 25 and would be a second saved preset.
 
@@ -198,11 +198,11 @@ Each class can optionally have a seating chart: a simple top-down diagram of the
 
 **Data added to the model**
 
-| Entity | Key fields |
-| --- | --- |
-| Student | photo (optional), added to the existing fields |
-| Seating chart | class, name, current flag, front side |
-| Desk | chart, row, position in half columns, student (optional), guest name (optional) |
+| Entity        | Key fields                                                                      |
+| ------------- | ------------------------------------------------------------------------------- |
+| Student       | photo (optional), added to the existing fields                                  |
+| Seating chart | class, name, current flag, front side                                           |
+| Desk          | chart, row, position in half columns, student (optional), guest name (optional) |
 
 ## Attendance
 
@@ -230,8 +230,8 @@ Teachers record attendance for each class meeting and can review the history for
 - Attendance records move with a student who transfers to another class, and they are archived with the class at year rollover.
 - Attendance is visible only to the teacher, and parents are not emailed about it in v1.
 
-| Entity | Key fields |
-| --- | --- |
+| Entity            | Key fields                                                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | Attendance record | class, student, date, status (present, late, excused absence, unexcused absence), note. One record per student per class per date |
 
 ## Missing-work lists
@@ -253,21 +253,21 @@ Each student can have one comment per term, attached to their term grade and sho
 - **No pronouns:** the app stores no pronouns, and suggestions use the student's name or neutral wording unless the teacher's own prompt uses pronouns.
 - **Output:** comments can be printed as one class sheet and exported to CSV.
 
-| Entity | Key fields |
-| --- | --- |
+| Entity        | Key fields                 |
+| ------------- | -------------------------- |
 | Final comment | class, student, term, text |
 
 ## Needs-attention notifications
 
 The app flags students who may need help. Each rule can be turned on or off in Settings and has its own threshold. Defaults are set once and can be overridden per class.
 
-| Rule | Fires when | Default |
-| --- | --- | --- |
-| Low grade | The student's term grade is below the threshold | Below 70 |
-| Missing work | The student has N missing assignments in a row, by date, skipping excused and dropped ones | 2 in a row |
-| Sharp drop | The term grade has fallen by at least N points compared with 14 days earlier | 10 points |
+| Rule              | Fires when                                                                                                                         | Default      |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Low grade         | The student's term grade is below the threshold                                                                                    | Below 70     |
+| Missing work      | The student has N missing assignments in a row, by date, skipping excused and dropped ones                                         | 2 in a row   |
+| Sharp drop        | The term grade has fallen by at least N points compared with 14 days earlier                                                       | 10 points    |
 | Frequent absences | The student has N absences within a set number of days. Excused absences count by default, and a setting can limit it to unexcused | 3 in 30 days |
-| Frequent lateness | The student has been marked Late N times within a set number of days | 3 in 30 days |
+| Frequent lateness | The student has been marked Late N times within a set number of days                                                               | 3 in 30 days |
 
 - Notifications appear in the app only, for the teacher only: a bell with a count, and a list grouped by class that shows the student, the rule and the numbers behind it.
 - Each notification can be dismissed, snoozed or opened. A rule does not fire again for the same student until the condition has cleared and then happens again.
@@ -292,15 +292,15 @@ Teachers should not have to retype data they already have in Excel.
 
 **Proposed stack (open to change):**
 
-| Layer | Choice | Why |
-| --- | --- | --- |
-| Front end | React with TypeScript | Widely recognized by employers |
-| Back end | Node with TypeScript (or Next.js full stack) | One language end to end, shared types for the grading engine |
-| Database | PostgreSQL via an ORM such as Prisma | Relational fit for classes, students and scores |
-| Auth | Email and password with sessions, or a hosted provider | Keeps accounts secure without custom crypto |
-| Email | A transactional provider such as Resend or SendGrid | Reliable delivery and logs |
-| Charts | A small chart library or hand-drawn SVG | Needed for per-student sparklines |
-| Tests and CI | Vitest, Playwright, GitHub Actions | Standard and visible to reviewers |
+| Layer        | Choice                                                 | Why                                                          |
+| ------------ | ------------------------------------------------------ | ------------------------------------------------------------ |
+| Front end    | React with TypeScript                                  | Widely recognized by employers                               |
+| Back end     | Node with TypeScript (or Next.js full stack)           | One language end to end, shared types for the grading engine |
+| Database     | PostgreSQL via an ORM such as Prisma                   | Relational fit for classes, students and scores              |
+| Auth         | Email and password with sessions, or a hosted provider | Keeps accounts secure without custom crypto                  |
+| Email        | A transactional provider such as Resend or SendGrid    | Reliable delivery and logs                                   |
+| Charts       | A small chart library or hand-drawn SVG                | Needed for per-student sparklines                            |
+| Tests and CI | Vitest, Playwright, GitHub Actions                     | Standard and visible to reviewers                            |
 
 The grading engine lives in its own shared package so the front end can preview grades instantly and the server can verify them.
 
@@ -321,12 +321,12 @@ Each phase ends with something that runs and can be demonstrated. Phases 1 to 3 
 
 **Priority by feature**
 
-| Priority | Features |
-| --- | --- |
+| Priority                         | Features                                                                                                                                                                                                                                                       |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Must have (first usable version) | Accounts, classes and students, configurable categories, weights and grade scale, saved weight presets, terms and year grades, gradebook entry grid, excused / dropped / missing / late statuses, practice sets with printable per-student reports, attendance |
-| Next | Retakes and drop-lowest, automatic late deduction with its dialog, missing-work lists, needs-attention notifications, final grade comments with AI suggestions |
-| After that | Seating charts with photos, email to parents, year rollover, CSV import and export |
-| Later | Rubrics, adjustments and curves, workbook import, PDF download, Daily Roll |
+| Next                             | Retakes and drop-lowest, automatic late deduction with its dialog, missing-work lists, needs-attention notifications, final grade comments with AI suggestions                                                                                                 |
+| After that                       | Seating charts with photos, email to parents, year rollover, CSV import and export                                                                                                                                                                             |
+| Later                            | Rubrics, adjustments and curves, workbook import, PDF download, Daily Roll                                                                                                                                                                                     |
 
 ## Decisions
 
