@@ -339,7 +339,7 @@ describe("categoryScore", () => {
             points: 85,
           },
         ]),
-      ).toBeCloseTo(86.67, 2);
+      ).toBeCloseTo(260 / 3, 10);
     });
   });
 
