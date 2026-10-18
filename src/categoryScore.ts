@@ -3,8 +3,9 @@ import type { Score } from "./types";
 /**
  * Calculates the average score for a category based on its scores.
  * Not all scores are counted in the average.
- * Counted scores are have status of "entered", "late", or "missing".
- * Dropped, excused, and not-entered scores are ignored.
+ * Counted scores have status of "entered", "late", or "missing".
+ * Dropped, excused, and not-entered scores are ignored, and so are scores
+ * with pointsPossible of 0 or less.
  * Missing scores are counted as 0.
  * If there are no counted scores, the average is null.
  */
