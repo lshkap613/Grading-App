@@ -340,8 +340,55 @@ describe("categoryScore", () => {
   });
 
   describe("invalid pointsPossible", () => {
-    it.todo("entered 80 + entered 5/0 -> 80 (invalid score ignored)");
-    it.todo("entered 80 + entered 5/-10 -> 80 (invalid score ignored)");
-    it.todo("only a score with pointsPossible 0 -> null");
+    it("entered 80 + entered 5/0 -> 80 (invalid score ignored)", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 80,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 0,
+            status: "entered",
+            points: 5,
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it("entered 80 + entered 5/-10 -> 80 (invalid score ignored)", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 80,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: -10,
+            status: "entered",
+            points: 5,
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it("only a score with pointsPossible 0 -> null", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 0,
+            status: "entered",
+            points: 5,
+          },
+        ]),
+      ).toBeNull();
+    });
   });
 });
