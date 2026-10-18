@@ -3,6 +3,7 @@ import { categoryScore } from "../src/categoryScore";
 
 // All scores are out of 100 unless the name says otherwise.
 describe("categoryScore", () => {
+  // Inputs with no counted scores return null, never 0.
   describe("nothing to count", () => {
     it("no scores -> null", () => {
       expect(categoryScore([])).toBeNull();
@@ -42,6 +43,7 @@ describe("categoryScore", () => {
     });
   });
 
+  // One score of each counted kind, converted to a percentage.
   describe("single score", () => {
     it("one entered 85 -> 85", () => {
       expect(
@@ -108,6 +110,7 @@ describe("categoryScore", () => {
     });
   });
 
+  // Missing counts as 0; excused, not-entered and dropped are left out.
   describe("statuses", () => {
     it("entered 80 + missing -> 40", () => {
       expect(
@@ -223,6 +226,7 @@ describe("categoryScore", () => {
     });
   });
 
+  // Extra credit, other point scales, and averaging percentages rather than points.
   describe("percentages", () => {
     it("extra credit: entered 104 -> 104", () => {
       expect(
@@ -339,6 +343,7 @@ describe("categoryScore", () => {
     });
   });
 
+  // Scores with pointsPossible of 0 or less are skipped.
   describe("invalid pointsPossible", () => {
     it("entered 80 + entered 5/0 -> 80 (invalid score ignored)", () => {
       expect(
