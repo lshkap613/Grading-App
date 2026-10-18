@@ -1,15 +1,32 @@
 import type { Score } from "./types";
 
+/**
+ * Calculates the average score for a category based on its scores.
+ * Not all scores are counted in the average.
+ * Counted scores are have status of "entered", "late", or "missing".
+ * Dropped, excused, and not-entered scores are ignored.
+ * Missing scores are counted as 0.
+ * If there are no counted scores, the average is null.
+ */
 export function categoryScore(scores: readonly Score[]): number | null {
-  const countedScores = scores.filter((score) => score.status === "entered");
+  const countedScores = scores.filter(
+    (score) =>
+      score.status === "entered" ||
+      score.status === "late" ||
+      score.status === "missing",
+  );
+
+  const percents = countedScores.map((score) => {
+    if (score.status === "missing") {
+      return 0;
+    }
+    return (score.points / score.pointsPossible) * 100;
+  });
 
   const average =
-    countedScores.length === 0
+    percents.length === 0
       ? null
-      : countedScores.reduce(
-          (sum, score) => sum + (score.points / score.pointsPossible) * 100,
-          0,
-        ) / countedScores.length;
+      : percents.reduce((sum, percent) => sum + percent, 0) / percents.length;
 
   return average;
 }
