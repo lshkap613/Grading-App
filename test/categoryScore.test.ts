@@ -109,12 +109,119 @@ describe("categoryScore", () => {
   });
 
   describe("statuses", () => {
-    it.todo("entered 80 + missing -> 40");
-    it.todo("entered 80 + excused -> 80");
-    it.todo("entered 80 + not-entered -> 80");
-    it.todo("entered 80 + dropped 20 -> 80");
-    it.todo(
-      "entered 100, late 70, missing, excused, not-entered, dropped 10 -> 56.67 (170 / 3)",
+    it("entered 80 + missing -> 40", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 80,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "missing",
+          },
+        ]),
+      ).toBe(40);
+    });
+
+    it("entered 80 + excused -> 80", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 80,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "excused",
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it("entered 80 + not-entered -> 80", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 80,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "not-entered",
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it("entered 80 + dropped 20 -> 80", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 80,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "dropped",
+            points: 20,
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it(
+      "entered 100, late 70, missing, excused, not-entered, dropped 10 -> 56.67 (170 / 3)", () => {
+        expect(
+          categoryScore([
+            {
+              categoryId: "homework",
+              pointsPossible: 100,
+              status: "entered",
+              points: 100,
+            },
+            {
+              categoryId: "homework",
+              pointsPossible: 100,
+              status: "late",
+              points: 70,
+            },
+            {
+              categoryId: "homework",
+              pointsPossible: 100,
+              status: "missing",
+            },
+            {
+              categoryId: "homework",
+              pointsPossible: 100,
+              status: "excused",
+            },
+            {
+              categoryId: "homework",
+              pointsPossible: 100,
+              status: "not-entered",
+            },
+            {
+              categoryId: "homework",
+              pointsPossible: 100,
+              status: "dropped",
+              points: 10,
+            },
+          ]),
+        ).toBeCloseTo(56.67, 2);
+      }
     );
   });
 
