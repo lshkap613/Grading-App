@@ -9,12 +9,14 @@ import type { Score } from "./types";
  * If there are no counted scores, the average is null.
  */
 export function categoryScore(scores: readonly Score[]): number | null {
-  const countedScores = scores.filter(
-    (score) =>
-      score.status === "entered" ||
-      score.status === "late" ||
-      score.status === "missing",
-  ).filter((score) => score.pointsPossible > 0);
+  const countedScores = scores
+    .filter(
+      (score) =>
+        score.status === "entered" ||
+        score.status === "late" ||
+        score.status === "missing",
+    )
+    .filter((score) => score.pointsPossible > 0);
 
   const percents = countedScores.map((score) => {
     if (score.status === "missing") {
