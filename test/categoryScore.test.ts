@@ -182,58 +182,161 @@ describe("categoryScore", () => {
       ).toBe(80);
     });
 
-    it(
-      "entered 100, late 70, missing, excused, not-entered, dropped 10 -> 56.67 (170 / 3)", () => {
-        expect(
-          categoryScore([
-            {
-              categoryId: "homework",
-              pointsPossible: 100,
-              status: "entered",
-              points: 100,
-            },
-            {
-              categoryId: "homework",
-              pointsPossible: 100,
-              status: "late",
-              points: 70,
-            },
-            {
-              categoryId: "homework",
-              pointsPossible: 100,
-              status: "missing",
-            },
-            {
-              categoryId: "homework",
-              pointsPossible: 100,
-              status: "excused",
-            },
-            {
-              categoryId: "homework",
-              pointsPossible: 100,
-              status: "not-entered",
-            },
-            {
-              categoryId: "homework",
-              pointsPossible: 100,
-              status: "dropped",
-              points: 10,
-            },
-          ]),
-        ).toBeCloseTo(56.67, 2);
-      }
-    );
+    it("entered 100, late 70, missing, excused, not-entered, dropped 10 -> 56.67 (170 / 3)", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 100,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "late",
+            points: 70,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "missing",
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "excused",
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "not-entered",
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "dropped",
+            points: 10,
+          },
+        ]),
+      ).toBeCloseTo(56.67, 2);
+    });
   });
 
   describe("percentages", () => {
-    it.todo("extra credit: entered 104 -> 104");
-    it.todo("extra credit: entered 104 + entered 96 -> 100");
-    it.todo("participation: 4/5 -> 80");
-    it.todo("participation: 5/5, 4/5, 3/5 -> 80");
-    it.todo(
-      "mixed pointsPossible: 18/20 + 50/100 -> 70 (average of percentages, not 68/120 = 56.67)",
-    );
-    it.todo("repeating decimal: 90, 85, 85 -> 86.67 (260 / 3, not rounded)");
+    it("extra credit: entered 104 -> 104", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 104,
+          },
+        ]),
+      ).toBe(104);
+    });
+
+    it("extra credit: entered 104 + entered 96 -> 100", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 104,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 96,
+          },
+        ]),
+      ).toBe(100);
+    });
+
+    it("participation: 4/5 -> 80", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "participation",
+            pointsPossible: 5,
+            status: "entered",
+            points: 4,
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it("participation: 5/5, 4/5, 3/5 -> 80", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "participation",
+            pointsPossible: 5,
+            status: "entered",
+            points: 5,
+          },
+          {
+            categoryId: "participation",
+            pointsPossible: 5,
+            status: "entered",
+            points: 4,
+          },
+          {
+            categoryId: "participation",
+            pointsPossible: 5,
+            status: "entered",
+            points: 3,
+          },
+        ]),
+      ).toBe(80);
+    });
+
+    it("mixed pointsPossible: 18/20 + 50/100 -> 70 (average of percentages, not 68/120 = 56.67)", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 20,
+            status: "entered",
+            points: 18,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 50,
+          },
+        ]),
+      ).toBe(70);
+    });
+
+    it("repeating decimal: 90, 85, 85 -> 86.67 (260 / 3, not rounded)", () => {
+      expect(
+        categoryScore([
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 90,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 85,
+          },
+          {
+            categoryId: "homework",
+            pointsPossible: 100,
+            status: "entered",
+            points: 85,
+          },
+        ]),
+      ).toBeCloseTo(86.67, 2);
+    });
   });
 
   describe("invalid pointsPossible", () => {
