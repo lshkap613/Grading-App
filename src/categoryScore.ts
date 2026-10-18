@@ -14,7 +14,7 @@ export function categoryScore(scores: readonly Score[]): number | null {
       score.status === "entered" ||
       score.status === "late" ||
       score.status === "missing",
-  );
+  ).filter((score) => score.pointsPossible > 0);
 
   const percents = countedScores.map((score) => {
     if (score.status === "missing") {
