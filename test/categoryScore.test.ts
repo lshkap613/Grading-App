@@ -1,57 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { categoryScore } from "../src/categoryScore";
-import type {
-  EnteredScore,
-  LateScore,
-  MissingScore,
-  DroppedScore,
-  ExcusedScore,
-  NotEnteredScore,
-} from "../src/types";
-
-// Test helpers that build one score of each status, so each test reads like
-// its name. Scores default to the "homework" category and 100 points possible.
-function entered(
-  points: number,
-  pointsPossible = 100,
-  categoryId = "homework",
-): EnteredScore {
-  return { categoryId, pointsPossible, status: "entered", points };
-}
-
-function late(
-  points: number,
-  pointsPossible = 100,
-  categoryId = "homework",
-): LateScore {
-  return { categoryId, pointsPossible, status: "late", points };
-}
-
-function missing(pointsPossible = 100, categoryId = "homework"): MissingScore {
-  return { categoryId, pointsPossible, status: "missing" };
-}
-
-function dropped(
-  points?: number,
-  pointsPossible = 100,
-  categoryId = "homework",
-): DroppedScore {
-  if (points === undefined) {
-    return { categoryId, pointsPossible, status: "dropped" };
-  }
-  return { categoryId, pointsPossible, status: "dropped", points };
-}
-
-function excused(pointsPossible = 100, categoryId = "homework"): ExcusedScore {
-  return { categoryId, pointsPossible, status: "excused" };
-}
-
-function notEntered(
-  pointsPossible = 100,
-  categoryId = "homework",
-): NotEnteredScore {
-  return { categoryId, pointsPossible, status: "not-entered" };
-}
+import { entered, late, missing, dropped, excused, notEntered } from "./helpers";
 
 // All scores are out of 100 unless the name says otherwise.
 describe("categoryScore", () => {
