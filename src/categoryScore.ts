@@ -26,10 +26,7 @@ export function categoryScore(scores: readonly Score[]): number | null {
     return (score.points / score.pointsPossible) * 100;
   });
 
-  const average =
-    percents.length === 0
+  return percents.length === 0
       ? null
       : percents.reduce((sum, percent) => sum + percent, 0) / percents.length;
-
-  return average;
 }
