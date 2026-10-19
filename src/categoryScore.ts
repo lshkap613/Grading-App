@@ -27,6 +27,6 @@ export function categoryScore(scores: readonly Score[]): number | null {
   });
 
   return percents.length === 0
-      ? null
-      : percents.reduce((sum, percent) => sum + percent, 0) / percents.length;
+    ? null
+    : percents.reduce((sum, percent) => sum + percent, 0) / percents.length;
 }
