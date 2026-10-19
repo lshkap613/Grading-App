@@ -125,7 +125,7 @@ describe("categoryScore", () => {
           notEntered(),
           dropped(10),
         ]),
-      ).toBeCloseTo(170/3, 10);
+      ).toBeCloseTo(170 / 3, 10);
     });
   });
 
