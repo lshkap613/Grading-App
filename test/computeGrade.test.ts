@@ -1,14 +1,27 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
+import { DEFAULT_SCALE } from "../src/defaults";
+import type { Config } from "../src/types";
+import { computeGrade } from "../src/computeGrade";
 
 // Unless a test says otherwise: weights { homework: 50, tests: 50 }, the default
 // scale, decimalPlaces 0, and every score is out of 100.
 // Issues are listed in the same order as the scores that caused them.
+const config: Config = {
+  scale: DEFAULT_SCALE,
+  weights: { homework: 50, tests: 50 },
+  decimalPlaces: 0,
+};
 
 describe("computeGrade", () => {
   describe("no counted scores", () => {
-    it.todo(
-      "no scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}",
-    );
+    it("no scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
+      expect(computeGrade([], config)).toEqual({
+        gradePerCategory: {},
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [],
+      });
+    });
     it.todo(
       "only not-entered scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}",
     );
