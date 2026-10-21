@@ -1,4 +1,4 @@
-import { categoryScore } from "./categoryScore";
+import { categoryScore, hasValidPointsPossible } from "./categoryScore";
 import type { Config, GradeResult, Issue, Score } from "./types";
 
 export function computeGrade(
@@ -13,6 +13,22 @@ export function computeGrade(
     gradePerCategory[categoryId] = categoryScore(
       scores.filter((score) => score.categoryId === categoryId),
     );
+  }
+
+  // check for issues
+  for (const score of scores) {
+    // unknown category issue
+    if (!Object.hasOwn(config.weights, score.categoryId)) {
+      issues.push({ kind: "unknown-category", categoryId: score.categoryId });
+    }
+
+    // invalid pointsPossible issue
+    if (!hasValidPointsPossible(score)) {
+      issues.push({
+        kind: "invalid-points-possible",
+        categoryId: score.categoryId,
+      });
+    }
   }
 
   return {

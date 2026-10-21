@@ -49,6 +49,7 @@ describe("computeGrade", () => {
     it("homework 85 -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: []}", () => {
       const result = computeGrade([entered(85)], config);
       expect(result.gradePerCategory).toEqual({ homework: 85, tests: null });
+      expect(result.issues).toEqual([]);
     });
 
     it("homework 85, quizzes 60 (categoryId not in weights) -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]}", () => {
@@ -60,6 +61,9 @@ describe("computeGrade", () => {
         homework: 85,
         tests: null,
       });
+      expect(result.issues).toEqual([
+        { kind: "unknown-category", categoryId: "quizzes" },
+      ]);
     });
 
     it("homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
@@ -68,6 +72,9 @@ describe("computeGrade", () => {
         homework: null,
         tests: null,
       });
+      expect(result.issues).toEqual([
+        { kind: "invalid-points-possible", categoryId: "homework" },
+      ]);
     });
 
     it("homework 80, homework 5/0 -> {gradePerCategory: {homework: 80, tests: null}, weightedTotal: 80, letterGrade: 'B-', issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
@@ -76,6 +83,9 @@ describe("computeGrade", () => {
         homework: 80,
         tests: null,
       });
+      expect(result.issues).toEqual([
+        { kind: "invalid-points-possible", categoryId: "homework" },
+      ]);
     });
 
     it("quizzes 85, homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}, {kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
@@ -87,6 +97,10 @@ describe("computeGrade", () => {
         homework: null,
         tests: null,
       });
+      expect(result.issues).toEqual([
+        { kind: "unknown-category", categoryId: "quizzes" },
+        { kind: "invalid-points-possible", categoryId: "homework" },
+      ]);
     });
 
     it("weights {homework: 30, quizzes: 20, tests: 50}, no scores -> gradePerCategory has all three keys, each null", () => {
@@ -100,6 +114,7 @@ describe("computeGrade", () => {
         quizzes: null,
         tests: null,
       });
+      expect(result.issues).toEqual([]);
     });
   });
 
