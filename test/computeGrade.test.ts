@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_SCALE } from "../src/defaults";
 import type { Config } from "../src/types";
 import { computeGrade } from "../src/computeGrade";
-import { dropped, notEntered } from "./helpers";
+import { dropped, entered, notEntered } from "./helpers";
 
 // Unless a test says otherwise: weights { homework: 50, tests: 50 }, the default
 // scale, decimalPlaces 0, and every score is out of 100.
@@ -46,24 +46,61 @@ describe("computeGrade", () => {
   });
 
   describe("grouping and issues", () => {
-    it.todo(
-      "homework 85 -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: []}",
-    );
-    it.todo(
-      "homework 85, quizzes 60 (categoryId not in weights) -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]}",
-    );
-    it.todo(
-      "homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}",
-    );
-    it.todo(
-      "homework 80, homework 5/0 -> {gradePerCategory: {homework: 80, tests: null}, weightedTotal: 80, letterGrade: 'B-', issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}",
-    );
-    it.todo(
-      "quizzes 85, homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}, {kind: 'invalid-points-possible', categoryId: 'homework'}]}",
-    );
-    it.todo(
-      "weights {homework: 30, quizzes: 20, tests: 50}, no scores -> gradePerCategory has all three keys, each null",
-    );
+    it("homework 85 -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: []}", () => {
+      const result = computeGrade([entered(85)], config);
+      expect(result.gradePerCategory).toEqual({ homework: 85, tests: null });
+    });
+
+    it("homework 85, quizzes 60 (categoryId not in weights) -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]}", () => {
+      const result = computeGrade(
+        [entered(85), entered(60, 100, "quizzes")],
+        config,
+      );
+      expect(result.gradePerCategory).toEqual({
+        homework: 85,
+        tests: null,
+      });
+    });
+
+    it("homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
+      const result = computeGrade([entered(85, 0)], config);
+      expect(result.gradePerCategory).toEqual({
+        homework: null,
+        tests: null,
+      });
+    });
+
+    it("homework 80, homework 5/0 -> {gradePerCategory: {homework: 80, tests: null}, weightedTotal: 80, letterGrade: 'B-', issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
+      const result = computeGrade([entered(80), entered(5, 0)], config);
+      expect(result.gradePerCategory).toEqual({
+        homework: 80,
+        tests: null,
+      });
+    });
+
+    it("quizzes 85, homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}, {kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
+      const result = computeGrade(
+        [entered(85, 100, "quizzes"), entered(85, 0)],
+        config,
+      );
+      expect(result.gradePerCategory).toEqual({
+        homework: null,
+        tests: null,
+      });
+    });
+
+    it("weights {homework: 30, quizzes: 20, tests: 50}, no scores -> gradePerCategory has all three keys, each null", () => {
+      const result = computeGrade([], {
+        scale: config.scale,
+        weights: { homework: 30, quizzes: 20, tests: 50 },
+        decimalPlaces: config.decimalPlaces,
+      });
+      expect(result.gradePerCategory).toEqual({
+        homework: null,
+        quizzes: null,
+        tests: null,
+      });
+    });
   });
 
   describe("weighted total", () => {

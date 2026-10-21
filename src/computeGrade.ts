@@ -1,3 +1,4 @@
+import { categoryScore } from "./categoryScore";
 import type { Config, GradeResult, Issue, Score } from "./types";
 
 export function computeGrade(
@@ -7,8 +8,11 @@ export function computeGrade(
   const gradePerCategory: Record<string, number | null> = {};
   const issues: Issue[] = [];
 
+  // get the grade for each known category
   for (const categoryId of Object.keys(config.weights)) {
-    gradePerCategory[categoryId] = null;
+    gradePerCategory[categoryId] = categoryScore(
+      scores.filter((score) => score.categoryId === categoryId),
+    );
   }
 
   return {
