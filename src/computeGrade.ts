@@ -23,7 +23,7 @@ export function computeGrade(
     }
 
     // invalid pointsPossible issue
-    if (!hasValidPointsPossible(score)) {
+    else if (!hasValidPointsPossible(score)) {
       issues.push({
         kind: "invalid-points-possible",
         categoryId: score.categoryId,

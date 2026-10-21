@@ -116,6 +116,17 @@ describe("computeGrade", () => {
       });
       expect(result.issues).toEqual([]);
     });
+
+    it("quizzes 75/0 -> {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'invalid-points-possible', categoryId: 'quizzes'}]}", () => {
+      const result = computeGrade([entered(75, 0, "quizzes")], config);
+      expect(result.gradePerCategory).toEqual({
+        homework: null,
+        tests: null,
+      });
+      expect(result.issues).toEqual([
+        { kind: "unknown-category", categoryId: "quizzes" },
+      ]);
+    });
   });
 
   describe("weighted total", () => {
