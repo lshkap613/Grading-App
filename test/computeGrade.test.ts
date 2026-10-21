@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_SCALE } from "../src/defaults";
 import type { Config } from "../src/types";
 import { computeGrade } from "../src/computeGrade";
+import { dropped, notEntered } from "./helpers";
 
 // Unless a test says otherwise: weights { homework: 50, tests: 50 }, the default
 // scale, decimalPlaces 0, and every score is out of 100.
@@ -16,18 +17,32 @@ describe("computeGrade", () => {
   describe("no counted scores", () => {
     it("no scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
       expect(computeGrade([], config)).toEqual({
-        gradePerCategory: {},
+        gradePerCategory: { homework: null, tests: null },
         weightedTotal: null,
         letterGrade: null,
         issues: [],
       });
     });
-    it.todo(
-      "only not-entered scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}",
-    );
-    it.todo(
-      "homework dropped 17, tests dropped 45 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}",
-    );
+    it("only not-entered scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
+      expect(
+        computeGrade([notEntered(), notEntered(100, "tests")], config),
+      ).toEqual({
+        gradePerCategory: { homework: null, tests: null },
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [],
+      });
+    });
+    it("homework dropped 17, tests dropped 45 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
+      expect(
+        computeGrade([dropped(17), dropped(45, 100, "tests")], config),
+      ).toEqual({
+        gradePerCategory: { homework: null, tests: null },
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [],
+      });
+    });
   });
 
   describe("grouping and issues", () => {

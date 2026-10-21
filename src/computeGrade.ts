@@ -7,6 +7,10 @@ export function computeGrade(
   const gradePerCategory: Record<string, number | null> = {};
   const issues: Issue[] = [];
 
+  for (const categoryId of Object.keys(config.weights)) {
+    gradePerCategory[categoryId] = null;
+  }
+
   return {
     gradePerCategory,
     weightedTotal: null,
