@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { categoryScore } from "../src/categoryScore";
-import { entered, late, missing, dropped, excused, notEntered } from "./helpers";
+import {
+  entered,
+  late,
+  missing,
+  dropped,
+  excused,
+  notEntered,
+} from "./helpers";
 
 // All scores are out of 100 unless the name says otherwise.
 describe("categoryScore", () => {

@@ -25,7 +25,10 @@ export function late(
   return { categoryId, pointsPossible, status: "late", points };
 }
 
-export function missing(pointsPossible = 100, categoryId = "homework"): MissingScore {
+export function missing(
+  pointsPossible = 100,
+  categoryId = "homework",
+): MissingScore {
   return { categoryId, pointsPossible, status: "missing" };
 }
 
@@ -40,7 +43,10 @@ export function dropped(
   return { categoryId, pointsPossible, status: "dropped", points };
 }
 
-export function excused(pointsPossible = 100, categoryId = "homework"): ExcusedScore {
+export function excused(
+  pointsPossible = 100,
+  categoryId = "homework",
+): ExcusedScore {
   return { categoryId, pointsPossible, status: "excused" };
 }
 
