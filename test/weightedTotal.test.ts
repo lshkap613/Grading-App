@@ -15,31 +15,63 @@ describe("weightedTotal", () => {
       );
     });
 
-    it.todo("homework 100, tests null -> 100 (null category skipped)");
-    it.todo(
-      "homework 0, tests 100 -> 50 (a score of 0 counts; only null is skipped)",
-    );
-    it.todo(
-      "spec example: weights {participation: 30, homework: 20, quizzes: 20, tests: 30}, participation 100, homework 80, quizzes 90, tests null -> 91.43 (6400 / 70)",
-    );
+    it("homework 100, tests null -> 100 (null category skipped)", () => {
+      expect(weightedTotal({ homework: 100, tests: null }, weights)).toEqual(
+        100,
+      );
+    });
+
+    it("homework 0, tests 100 -> 50 (a score of 0 counts; only null is skipped)", () => {
+      expect(weightedTotal({ homework: 0, tests: 100 }, weights)).toEqual(50);
+    });
+
+    it("spec example: weights {participation: 30, homework: 20, quizzes: 20, tests: 30}, participation 100, homework 80, quizzes 90, tests null -> 91.43 (6400 / 70)", () => {
+      expect(
+        weightedTotal(
+          { participation: 100, homework: 80, quizzes: 90, tests: null },
+          { participation: 30, homework: 20, quizzes: 20, tests: 30 },
+        ),
+      ).toBeCloseTo(6400 / 70, 10);
+    });
   });
 
   // Each category's score is multiplied by its weight, then divided by the weights used.
   describe("weights", () => {
-    it.todo("homework 80, tests 90 -> 85");
-    it.todo(
-      "weights not adding up to 100: weights {homework: 1, tests: 1}, homework 80, tests 90 -> 85",
-    );
-    it.todo(
-      "weights {homework: 1, tests: 2}, homework 63.33 (190 / 3), tests 72 -> 69.11 (622 / 9)",
-    );
-    it.todo(
-      "7th grade spreadsheet row: weights {participation: 40, homework: 20, quizzes: 15, tests: 25}, participation 94, homework 89.6, quizzes 80, tests 100 -> 92.52",
-    );
+    it("homework 80, tests 90 -> 85", () => {
+      expect(weightedTotal({ homework: 80, tests: 90 }, weights)).toEqual(85);
+    });
+
+    it("weights not adding up to 100: weights {homework: 1, tests: 1}, homework 80, tests 90 -> 85", () => {
+      expect(
+        weightedTotal({ homework: 80, tests: 90 }, { homework: 1, tests: 1 }),
+      ).equal(85);
+    });
+
+    it("weights {homework: 1, tests: 2}, homework 63.33 (190 / 3), tests 72 -> 69.11 (622 / 9)", () => {
+      expect(
+        weightedTotal(
+          { homework: 190 / 3, tests: 72 },
+          { homework: 1, tests: 2 },
+        ),
+      ).toBeCloseTo(622 / 9, 10);
+    });
+
+    it("7th grade spreadsheet row: weights {participation: 40, homework: 20, quizzes: 15, tests: 25}, participation 94, homework 89.6, quizzes 80, tests 100 -> 92.52", () => {
+      expect(
+        weightedTotal(
+          { participation: 94, homework: 89.6, quizzes: 80, tests: 100 },
+          { participation: 40, homework: 20, quizzes: 15, tests: 25 },
+        ),
+      );
+    });
   });
 
   // The total is not capped at 100.
   describe("extra credit", () => {
-    it.todo("homework 104, tests 96.1 -> 100.05");
+    it("homework 104, tests 96.1 -> 100.05", () => {
+      expect(weightedTotal({ homework: 104, tests: 96.1 }, weights)).toEqual(
+        100.05,
+      );
+    });
   });
 });
