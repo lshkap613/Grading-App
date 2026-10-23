@@ -1,4 +1,7 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
+import { weightedTotal } from "../src/weightedTotal";
+
+const weights = { homework: 50, tests: 50 };
 
 // Inputs are a gradePerCategory record (as built by computeGrade) and weights.
 // Unless a test says otherwise: weights { homework: 50, tests: 50 }.
@@ -6,7 +9,12 @@ import { describe, it } from "vitest";
 describe("weightedTotal", () => {
   // Categories with a null score are left out of both the sum and the divisor.
   describe("empty categories", () => {
-    it.todo("homework null, tests null -> null");
+    it("homework null, tests null -> null", () => {
+      expect(weightedTotal({ homework: null, tests: null }, weights)).toEqual(
+        null,
+      );
+    });
+
     it.todo("homework 100, tests null -> 100 (null category skipped)");
     it.todo(
       "homework 0, tests 100 -> 50 (a score of 0 counts; only null is skipped)",
