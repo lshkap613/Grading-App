@@ -62,7 +62,7 @@ describe("weightedTotal", () => {
           { participation: 94, homework: 89.6, quizzes: 80, tests: 100 },
           { participation: 40, homework: 20, quizzes: 15, tests: 25 },
         ),
-      );
+      ).toBe(92.52);
     });
   });
 
