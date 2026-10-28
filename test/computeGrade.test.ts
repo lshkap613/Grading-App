@@ -47,85 +47,78 @@ describe("computeGrade", () => {
 
   describe("grouping and issues", () => {
     it("homework 85 -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: []}", () => {
-      const result = computeGrade([entered(85)], config);
-      expect(result.gradePerCategory).toEqual({ homework: 85, tests: null });
-      expect(result.issues).toEqual([]);
+      expect(computeGrade([entered(85)], config)).toEqual({
+        gradePerCategory: { homework: 85, tests: null },
+        weightedTotal: 85,
+        letterGrade: "B",
+        issues: [],
+      });
     });
 
     it("homework 85, quizzes 60 (categoryId not in weights) -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]}", () => {
-      const result = computeGrade(
-        [entered(85), entered(60, 100, "quizzes")],
-        config,
-      );
-      expect(result.gradePerCategory).toEqual({
-        homework: 85,
-        tests: null,
+      expect(
+        computeGrade([entered(85), entered(60, 100, "quizzes")], config),
+      ).toEqual({
+        gradePerCategory: { homework: 85, tests: null },
+        weightedTotal: 85,
+        letterGrade: "B",
+        issues: [{ kind: "unknown-category", categoryId: "quizzes" }],
       });
-      expect(result.issues).toEqual([
-        { kind: "unknown-category", categoryId: "quizzes" },
-      ]);
     });
 
     it("homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
-      const result = computeGrade([entered(85, 0)], config);
-      expect(result.gradePerCategory).toEqual({
-        homework: null,
-        tests: null,
+      expect(computeGrade([entered(85, 0)], config)).toEqual({
+        gradePerCategory: { homework: null, tests: null },
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [{ kind: "invalid-points-possible", categoryId: "homework" }],
       });
-      expect(result.issues).toEqual([
-        { kind: "invalid-points-possible", categoryId: "homework" },
-      ]);
     });
 
     it("homework 80, homework 5/0 -> {gradePerCategory: {homework: 80, tests: null}, weightedTotal: 80, letterGrade: 'B-', issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
-      const result = computeGrade([entered(80), entered(5, 0)], config);
-      expect(result.gradePerCategory).toEqual({
-        homework: 80,
-        tests: null,
+      expect(computeGrade([entered(80), entered(5, 0)], config)).toEqual({
+        gradePerCategory: { homework: 80, tests: null },
+        weightedTotal: 80,
+        letterGrade: "B-",
+        issues: [{ kind: "invalid-points-possible", categoryId: "homework" }],
       });
-      expect(result.issues).toEqual([
-        { kind: "invalid-points-possible", categoryId: "homework" },
-      ]);
     });
 
     it("quizzes 85, homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}, {kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
-      const result = computeGrade(
-        [entered(85, 100, "quizzes"), entered(85, 0)],
-        config,
-      );
-      expect(result.gradePerCategory).toEqual({
-        homework: null,
-        tests: null,
+      expect(
+        computeGrade([entered(85, 100, "quizzes"), entered(85, 0)], config),
+      ).toEqual({
+        gradePerCategory: { homework: null, tests: null },
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [
+          { kind: "unknown-category", categoryId: "quizzes" },
+          { kind: "invalid-points-possible", categoryId: "homework" },
+        ],
       });
-      expect(result.issues).toEqual([
-        { kind: "unknown-category", categoryId: "quizzes" },
-        { kind: "invalid-points-possible", categoryId: "homework" },
-      ]);
     });
 
-    it("weights {homework: 30, quizzes: 20, tests: 50}, no scores -> gradePerCategory has all three keys, each null", () => {
-      const result = computeGrade([], {
-        scale: config.scale,
-        weights: { homework: 30, quizzes: 20, tests: 50 },
-        decimalPlaces: config.decimalPlaces,
+    it("weights {homework: 30, quizzes: 20, tests: 50}, no scores -> {gradePerCategory: {homework: null, quizzes: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
+      expect(
+        computeGrade([], {
+          ...config,
+          weights: { homework: 30, quizzes: 20, tests: 50 },
+        }),
+      ).toEqual({
+        gradePerCategory: { homework: null, quizzes: null, tests: null },
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [],
       });
-      expect(result.gradePerCategory).toEqual({
-        homework: null,
-        quizzes: null,
-        tests: null,
-      });
-      expect(result.issues).toEqual([]);
     });
 
-    it("quizzes 75/0 -> {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]} (unknown category issue returned only when invalid-points is also an issue)", () => {
-      const result = computeGrade([entered(75, 0, "quizzes")], config);
-      expect(result.gradePerCategory).toEqual({
-        homework: null,
-        tests: null,
+    it("quizzes 75/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]} (one issue per score: unknown-category wins over invalid-points-possible)", () => {
+      expect(computeGrade([entered(75, 0, "quizzes")], config)).toEqual({
+        gradePerCategory: { homework: null, tests: null },
+        weightedTotal: null,
+        letterGrade: null,
+        issues: [{ kind: "unknown-category", categoryId: "quizzes" }],
       });
-      expect(result.issues).toEqual([
-        { kind: "unknown-category", categoryId: "quizzes" },
-      ]);
     });
   });
 
