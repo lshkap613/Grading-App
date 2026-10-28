@@ -8,7 +8,7 @@ export function weightedTotal(
   let weightSum = 0;
 
   for (const [categoryId, weight] of Object.entries(weights)) {
-    let categoryGrade = gradePerCategory[categoryId];
+    const categoryGrade = gradePerCategory[categoryId];
 
     if (categoryGrade != null) {
       weightedSum += categoryGrade * weight;
