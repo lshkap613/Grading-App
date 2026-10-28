@@ -1,4 +1,6 @@
-export const DEFAULT_SCALE = [
+import type { Scale } from "./types";
+
+export const DEFAULT_SCALE: Scale = [
   { letter: "A+", minPercent: 97 },
   { letter: "A", minPercent: 93 },
   { letter: "A-", minPercent: 90 },
