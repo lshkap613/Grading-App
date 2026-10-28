@@ -1,5 +1,8 @@
 import { categoryScore, hasValidPointsPossible } from "./categoryScore";
 import type { Config, GradeResult, Issue, Score } from "./types";
+import { weightedTotal } from "./weightedTotal";
+import { roundTotal } from "./roundTotal";
+import { letterGrade } from "./letterGrade";
 
 export function computeGrade(
   scores: readonly Score[],
@@ -14,6 +17,12 @@ export function computeGrade(
       scores.filter((score) => score.categoryId === categoryId),
     );
   }
+
+  const rawTotal = weightedTotal(gradePerCategory, config.weights);
+  const roundedTotal =
+    rawTotal === null ? null : roundTotal(rawTotal, config.decimalPlaces);
+  const letter =
+    roundedTotal === null ? null : letterGrade(roundedTotal, config.scale);
 
   // check for issues
   for (const score of scores) {
@@ -33,8 +42,8 @@ export function computeGrade(
 
   return {
     gradePerCategory,
-    weightedTotal: null,
-    letterGrade: null,
+    weightedTotal: roundedTotal,
+    letterGrade: letter,
     issues,
   };
 }
