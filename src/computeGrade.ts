@@ -18,9 +18,12 @@ export function computeGrade(
     );
   }
 
+  // get the rounded, weighted total of all categories
   const rawTotal = weightedTotal(gradePerCategory, config.weights);
   const roundedTotal =
     rawTotal === null ? null : roundTotal(rawTotal, config.decimalPlaces);
+
+  // get the rounded, weighted total's corresponding letter
   const letter =
     roundedTotal === null ? null : letterGrade(roundedTotal, config.scale);
 
