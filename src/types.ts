@@ -1,8 +1,18 @@
+/** 2 is a retake of the same assignment. */
+export type AttemptNumber = 1 | 2;
+
 /**
  * Fields every score has, whatever its status.
- * `pointsPossible` is in points, not percent
+ * `pointsPossible` is in points, not percent. `date` is the assignment's date as
+ * an ISO string ("2026-09-01"), the same on both attempts.
  */
-export type ScoreBase = { categoryId: string; pointsPossible: number };
+export type ScoreBase = {
+  assignmentId: string;
+  categoryId: string;
+  pointsPossible: number;
+  date: string;
+  attempt: AttemptNumber;
+};
 
 export type EnteredScore = ScoreBase & { status: "entered"; points: number };
 export type LateScore = ScoreBase & { status: "late"; points: number };

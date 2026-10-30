@@ -25,7 +25,10 @@ describe("computeGrade", () => {
     });
     it("only not-entered scores -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
       expect(
-        computeGrade([notEntered(), notEntered(100, "tests")], config),
+        computeGrade(
+          [notEntered(), notEntered({ categoryId: "tests" })],
+          config,
+        ),
       ).toEqual({
         gradePerCategory: { homework: null, tests: null },
         weightedTotal: null,
@@ -35,7 +38,10 @@ describe("computeGrade", () => {
     });
     it("homework dropped 17, tests dropped 45 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: []}", () => {
       expect(
-        computeGrade([dropped(17), dropped(45, 100, "tests")], config),
+        computeGrade(
+          [dropped(17), dropped(45, { categoryId: "tests" })],
+          config,
+        ),
       ).toEqual({
         gradePerCategory: { homework: null, tests: null },
         weightedTotal: null,
@@ -57,7 +63,10 @@ describe("computeGrade", () => {
 
     it("homework 85, quizzes 60 (categoryId not in weights) -> {gradePerCategory: {homework: 85, tests: null}, weightedTotal: 85, letterGrade: 'B', issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]}", () => {
       expect(
-        computeGrade([entered(85), entered(60, 100, "quizzes")], config),
+        computeGrade(
+          [entered(85), entered(60, { categoryId: "quizzes" })],
+          config,
+        ),
       ).toEqual({
         gradePerCategory: { homework: 85, tests: null },
         weightedTotal: 85,
@@ -67,7 +76,9 @@ describe("computeGrade", () => {
     });
 
     it("homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
-      expect(computeGrade([entered(85, 0)], config)).toEqual({
+      expect(
+        computeGrade([entered(85, { pointsPossible: 0 })], config),
+      ).toEqual({
         gradePerCategory: { homework: null, tests: null },
         weightedTotal: null,
         letterGrade: null,
@@ -76,7 +87,9 @@ describe("computeGrade", () => {
     });
 
     it("homework 80, homework 5/0 -> {gradePerCategory: {homework: 80, tests: null}, weightedTotal: 80, letterGrade: 'B-', issues: [{kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
-      expect(computeGrade([entered(80), entered(5, 0)], config)).toEqual({
+      expect(
+        computeGrade([entered(80), entered(5, { pointsPossible: 0 })], config),
+      ).toEqual({
         gradePerCategory: { homework: 80, tests: null },
         weightedTotal: 80,
         letterGrade: "B-",
@@ -86,7 +99,13 @@ describe("computeGrade", () => {
 
     it("quizzes 85, homework 85/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}, {kind: 'invalid-points-possible', categoryId: 'homework'}]}", () => {
       expect(
-        computeGrade([entered(85, 100, "quizzes"), entered(85, 0)], config),
+        computeGrade(
+          [
+            entered(85, { categoryId: "quizzes" }),
+            entered(85, { pointsPossible: 0 }),
+          ],
+          config,
+        ),
       ).toEqual({
         gradePerCategory: { homework: null, tests: null },
         weightedTotal: null,
@@ -113,7 +132,12 @@ describe("computeGrade", () => {
     });
 
     it("quizzes 75/0 -> {gradePerCategory: {homework: null, tests: null}, weightedTotal: null, letterGrade: null, issues: [{kind: 'unknown-category', categoryId: 'quizzes'}]} (one issue per score: unknown-category wins over invalid-points-possible)", () => {
-      expect(computeGrade([entered(75, 0, "quizzes")], config)).toEqual({
+      expect(
+        computeGrade(
+          [entered(75, { pointsPossible: 0, categoryId: "quizzes" })],
+          config,
+        ),
+      ).toEqual({
         gradePerCategory: { homework: null, tests: null },
         weightedTotal: null,
         letterGrade: null,
@@ -135,7 +159,7 @@ describe("computeGrade", () => {
 
     it("homework 80, tests 90 -> {gradePerCategory: {homework: 80, tests: 90}, weightedTotal: 85, letterGrade: 'B', issues: []}", () => {
       const result = computeGrade(
-        [entered(80), entered(90, 100, "tests")],
+        [entered(80), entered(90, { categoryId: "tests" })],
         config,
       );
       expect(result).toEqual({
@@ -149,9 +173,9 @@ describe("computeGrade", () => {
     it("empty category skipped: weights {participation: 30, homework: 20, quizzes: 20, tests: 30}, participation 100, homework 80, quizzes 90, no tests -> weightedTotal 91 (6400 / 70 = 91.43), letterGrade 'A-'", () => {
       const result = computeGrade(
         [
-          entered(100, 100, "participation"),
+          entered(100, { categoryId: "participation" }),
           entered(80),
-          entered(90, 100, "quizzes"),
+          entered(90, { categoryId: "quizzes" }),
         ],
         {
           ...config,
@@ -172,10 +196,13 @@ describe("computeGrade", () => {
     });
 
     it("weights not adding up to 100: weights {homework: 1, tests: 1}, homework 80, tests 90 -> weightedTotal 85, letterGrade 'B'", () => {
-      const result = computeGrade([entered(80), entered(90, 100, "tests")], {
-        ...config,
-        weights: { homework: 1, tests: 1 },
-      });
+      const result = computeGrade(
+        [entered(80), entered(90, { categoryId: "tests" })],
+        {
+          ...config,
+          weights: { homework: 1, tests: 1 },
+        },
+      );
       expect(result.weightedTotal).toBe(85);
       expect(result.letterGrade).toBe("B");
     });
@@ -188,9 +215,9 @@ describe("computeGrade", () => {
           dropped(85),
           entered(90),
           entered(100),
-          notEntered(100, "tests"),
-          dropped(37, 100, "tests"),
-          entered(72, 100, "tests"),
+          notEntered({ categoryId: "tests" }),
+          dropped(37, { categoryId: "tests" }),
+          entered(72, { categoryId: "tests" }),
         ],
         { ...config, weights: { homework: 1, tests: 2 } },
       );
@@ -204,10 +231,10 @@ describe("computeGrade", () => {
     it("7th grade spreadsheet row: weights {participation: 40, homework: 20, quizzes: 15, tests: 25}, participation 94, homework 89.6, quizzes 80, tests 100 -> weightedTotal 93 (92.52 rounded), letterGrade 'A' (the spreadsheet showed A- because it didn't round)", () => {
       const result = computeGrade(
         [
-          entered(94, 100, "participation"),
+          entered(94, { categoryId: "participation" }),
           entered(89.6),
-          entered(80, 100, "quizzes"),
-          entered(100, 100, "tests"),
+          entered(80, { categoryId: "quizzes" }),
+          entered(100, { categoryId: "tests" }),
         ],
         {
           ...config,
@@ -220,7 +247,7 @@ describe("computeGrade", () => {
 
     it("extra credit: homework 104, tests 96.1 -> weightedTotal 100 (100.05 rounded), letterGrade 'A+'", () => {
       const result = computeGrade(
-        [entered(104), entered(96.1, 100, "tests")],
+        [entered(104), entered(96.1, { categoryId: "tests" })],
         config,
       );
       expect(result.weightedTotal).toBe(100);
@@ -288,7 +315,7 @@ describe("computeGrade", () => {
 
     it("homework 0, tests 0 -> weightedTotal 0, letterGrade 'F' (a total of 0 is not 'no total')", () => {
       const result = computeGrade(
-        [entered(0), entered(0, 100, "tests")],
+        [entered(0), entered(0, { categoryId: "tests" })],
         config,
       );
       expect(result.weightedTotal).toBe(0);

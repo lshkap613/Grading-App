@@ -37,7 +37,7 @@ describe("categoryScore", () => {
     });
 
     it("one entered 18/20 -> 90", () => {
-      expect(categoryScore([entered(18, 20)])).toBe(90);
+      expect(categoryScore([entered(18, { pointsPossible: 20 })])).toBe(90);
     });
 
     it("one late 70 -> 70 (no deduction)", () => {
@@ -96,21 +96,27 @@ describe("categoryScore", () => {
     });
 
     it("participation: 4/5 -> 80", () => {
-      expect(categoryScore([entered(4, 5, "participation")])).toBe(80);
+      expect(
+        categoryScore([
+          entered(4, { pointsPossible: 5, categoryId: "participation" }),
+        ]),
+      ).toBe(80);
     });
 
     it("participation: 5/5, 4/5, 3/5 -> 80", () => {
       expect(
         categoryScore([
-          entered(5, 5, "participation"),
-          entered(4, 5, "participation"),
-          entered(3, 5, "participation"),
+          entered(5, { pointsPossible: 5, categoryId: "participation" }),
+          entered(4, { pointsPossible: 5, categoryId: "participation" }),
+          entered(3, { pointsPossible: 5, categoryId: "participation" }),
         ]),
       ).toBe(80);
     });
 
     it("mixed pointsPossible: 18/20 + 50/100 -> 70 (average of percentages, not 68/120 = 56.67)", () => {
-      expect(categoryScore([entered(18, 20), entered(50)])).toBe(70);
+      expect(
+        categoryScore([entered(18, { pointsPossible: 20 }), entered(50)]),
+      ).toBe(70);
     });
 
     it("repeating decimal: 90, 85, 85 -> 86.67 (260 / 3, not rounded)", () => {
@@ -123,15 +129,19 @@ describe("categoryScore", () => {
   // Scores with pointsPossible of 0 or less are skipped.
   describe("invalid pointsPossible", () => {
     it("entered 80 + entered 5/0 -> 80 (invalid score ignored)", () => {
-      expect(categoryScore([entered(80), entered(5, 0)])).toBe(80);
+      expect(
+        categoryScore([entered(80), entered(5, { pointsPossible: 0 })]),
+      ).toBe(80);
     });
 
     it("entered 80 + entered 5/-10 -> 80 (invalid score ignored)", () => {
-      expect(categoryScore([entered(80), entered(5, -10)])).toBe(80);
+      expect(
+        categoryScore([entered(80), entered(5, { pointsPossible: -10 })]),
+      ).toBe(80);
     });
 
     it("only a score with pointsPossible 0 -> null", () => {
-      expect(categoryScore([entered(5, 0)])).toBeNull();
+      expect(categoryScore([entered(5, { pointsPossible: 0 })])).toBeNull();
     });
   });
 });
