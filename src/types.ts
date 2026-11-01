@@ -45,21 +45,24 @@ export type ScaleEntry = { letter: string; minPercent: number };
 
 export type Scale = readonly ScaleEntry[];
 
-/**
- * Category weight as a percentage, keyed by categoryId.
- */
+/** Category weight as a percentage, keyed by categoryId. */
 export type Weights = Readonly<Record<string, number>>;
+
+/** Each category's settings, keyed by categoryId. `dropLowest` is how many of the lowest scores to leave out. */
+export type Categories = Readonly<
+  Record<string, { weight: number; dropLowest: number }>
+>;
 
 /** Decimal places for the final total only; scores and averages are never rounded. */
 export type DecimalPlaces = 0 | 1 | 2;
 
 export type Config = {
   scale: Scale;
-  weights: Weights;
+  categories: Categories;
   decimalPlaces: DecimalPlaces;
 };
 
-/** A score's category has no entry in `weights`. The score is left out of the result. */
+/** A score's category has no entry in `categories`. The score is left out of the result. */
 export type UnknownCategoryIssue = {
   kind: "unknown-category";
   categoryId: string;

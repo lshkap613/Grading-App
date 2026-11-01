@@ -1,15 +1,15 @@
-import type { Score, Issue, Weights } from "./types";
+import type { Categories, Score, Issue } from "./types";
 import { hasValidPointsPossible } from "./categoryScore";
 
 export function findIssues(
   scores: readonly Score[],
-  weights: Weights,
+  categories: Categories,
 ): Issue[] {
   const issues: Issue[] = [];
 
   for (const score of scores) {
     // unknown category issue
-    if (!Object.hasOwn(weights, score.categoryId)) {
+    if (!Object.hasOwn(categories, score.categoryId)) {
       issues.push({ kind: "unknown-category", categoryId: score.categoryId });
     }
 

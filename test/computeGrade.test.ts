@@ -4,12 +4,15 @@ import type { Config } from "../src/types";
 import { computeGrade } from "../src/computeGrade";
 import { dropped, entered, excused, missing, notEntered } from "./helpers";
 
-// Unless a test says otherwise: weights { homework: 50, tests: 50 }, the default
+// Unless a test says otherwise: categories homework and tests, weight 50 each, dropLowest 0, the default
 // scale, decimalPlaces 0, and every score is out of 100.
 // Issues are listed in the same order as the scores that caused them.
 const config: Config = {
   scale: DEFAULT_SCALE,
-  weights: { homework: 50, tests: 50 },
+  categories: {
+    homework: { weight: 50, dropLowest: 0 },
+    tests: { weight: 50, dropLowest: 0 },
+  },
   decimalPlaces: 0,
 };
 
@@ -121,7 +124,11 @@ describe("computeGrade", () => {
       expect(
         computeGrade([], {
           ...config,
-          weights: { homework: 30, quizzes: 20, tests: 50 },
+          categories: {
+            homework: { weight: 30, dropLowest: 0 },
+            quizzes: { weight: 20, dropLowest: 0 },
+            tests: { weight: 50, dropLowest: 0 },
+          },
         }),
       ).toEqual({
         gradePerCategory: { homework: null, quizzes: null, tests: null },
@@ -179,7 +186,12 @@ describe("computeGrade", () => {
         ],
         {
           ...config,
-          weights: { participation: 30, homework: 20, quizzes: 20, tests: 30 },
+          categories: {
+            participation: { weight: 30, dropLowest: 0 },
+            homework: { weight: 20, dropLowest: 0 },
+            quizzes: { weight: 20, dropLowest: 0 },
+            tests: { weight: 30, dropLowest: 0 },
+          },
         },
       );
       expect(result).toEqual({
@@ -200,7 +212,10 @@ describe("computeGrade", () => {
         [entered(80), entered(90, { categoryId: "tests" })],
         {
           ...config,
-          weights: { homework: 1, tests: 1 },
+          categories: {
+            homework: { weight: 1, dropLowest: 0 },
+            tests: { weight: 1, dropLowest: 0 },
+          },
         },
       );
       expect(result.weightedTotal).toBe(85);
@@ -219,7 +234,13 @@ describe("computeGrade", () => {
           dropped(37, { categoryId: "tests" }),
           entered(72, { categoryId: "tests" }),
         ],
-        { ...config, weights: { homework: 1, tests: 2 } },
+        {
+          ...config,
+          categories: {
+            homework: { weight: 1, dropLowest: 0 },
+            tests: { weight: 2, dropLowest: 0 },
+          },
+        },
       );
       expect(result.gradePerCategory.homework).toBeCloseTo(190 / 3, 10);
       expect(result.gradePerCategory.tests).toBe(72);
@@ -238,7 +259,12 @@ describe("computeGrade", () => {
         ],
         {
           ...config,
-          weights: { participation: 40, homework: 20, quizzes: 15, tests: 25 },
+          categories: {
+            participation: { weight: 40, dropLowest: 0 },
+            homework: { weight: 20, dropLowest: 0 },
+            quizzes: { weight: 15, dropLowest: 0 },
+            tests: { weight: 25, dropLowest: 0 },
+          },
         },
       );
       expect(result.weightedTotal).toBe(93);
