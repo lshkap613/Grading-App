@@ -39,6 +39,8 @@ export type Score =
   | ExcusedScore
   | NotEnteredScore;
 
+export type CountedScore = EnteredScore | LateScore | MissingScore;
+
 export type ScoreStatus = Score["status"];
 
 export type ScaleEntry = { letter: string; minPercent: number };
