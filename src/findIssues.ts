@@ -1,5 +1,5 @@
 import type { Categories, Score, Issue } from "./types";
-import { hasValidPointsPossible } from "./categoryScore";
+import { hasValidPointsPossible } from "./score";
 
 export function findIssues(
   scores: readonly Score[],

@@ -1,4 +1,5 @@
-import type { Score, CountedScore } from "./types";
+import type { Score } from "./types";
+import { percentOf, hasValidPointsPossible } from "./score";
 
 /**
  * Calculates the average score for a category based on its scores.
@@ -24,15 +25,4 @@ export function categoryScore(scores: readonly Score[]): number | null {
   return percents.length === 0
     ? null
     : percents.reduce((sum, percent) => sum + percent, 0) / percents.length;
-}
-
-export function hasValidPointsPossible(score: Score): boolean {
-  return score.pointsPossible > 0;
-}
-
-export function percentOf(score: CountedScore): number {
-  if (score.status === "missing") {
-    return 0;
-  }
-  return (score.points / score.pointsPossible) * 100;
 }

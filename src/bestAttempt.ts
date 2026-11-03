@@ -1,5 +1,5 @@
 import type { CountedScore } from "./types";
-import { percentOf } from "./categoryScore";
+import { percentOf } from "./score";
 
 export function bestAttempt(scores: readonly CountedScore[]): CountedScore[] {
   const kept = new Map<string, CountedScore>();
